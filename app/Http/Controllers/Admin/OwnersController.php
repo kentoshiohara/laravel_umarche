@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Owner; // Eloquent エロクアント
 use Illuminate\Support\Facades\DB; // クエリビルダ
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 
 class OwnersController extends Controller
 {
@@ -57,9 +59,24 @@ class OwnersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    //  Requestはformで入力した値を$requestに渡される
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:owners'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        Owner::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password), // Hash::makeでパスワードをハッシュ化する
+        ]);
+
+        return redirect()
+        ->route('admin.owners.index')
+        ->with('message', 'オーナー登録を実施しました。');
     }
 
     /**
