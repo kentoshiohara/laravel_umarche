@@ -22,12 +22,12 @@ use App\Http\Controllers\Admin\OwnersController;
 |
 */
 
-Route::get('/', function () {
-    return view('admin.welcome');
-});
+// Route::get('/', function () {
+//     return view('admin.welcome');
+// });
 
 Route::resource('owners', OwnersController::class)
-->middleware('auth:admin'); // adminで認証されていたら表示する
+->middleware('auth:admin')->except(['show']); // adminで認証されていたら表示する
 
 Route::prefix('expired-owners')
 ->middleware('auth:admin')->group(function(){
