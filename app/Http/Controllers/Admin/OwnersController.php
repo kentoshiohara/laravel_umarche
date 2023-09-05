@@ -22,6 +22,7 @@ class OwnersController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+     // adminでログインしているかを確認
     public function __construct()
     {
         $this->middleware('auth:admin');
